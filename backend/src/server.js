@@ -1,6 +1,10 @@
-require('dotenv').config();
+const dns = require("node:dns");
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
+
 const cors = require('cors');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -11,6 +15,7 @@ const attendanceRoutes = require('./routes/attendance');
 const timesheetRoutes = require('./routes/timesheets');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/users');
+
 
 const app = express();
 
