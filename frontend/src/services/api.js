@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://softfrancbackend.onrender.com/api', // ✅ updated
   headers: { 'Content-Type': 'application/json' },
   withCredentials: false
 });
@@ -33,14 +33,20 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && error.response?.data?.code === 'TOKEN_EXPIRED' && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      error.response?.data?.code === 'TOKEN_EXPIRED' &&
+      !originalRequest._retry
+    ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        }).then(token => {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          return api(originalRequest);
-        }).catch(err => Promise.reject(err));
+        })
+          .then(token => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return api(originalRequest);
+          })
+          .catch(err => Promise.reject(err));
       }
 
       originalRequest._retry = true;
@@ -54,12 +60,19 @@ api.interceptors.response.use(
       }
 
       try {
-        const { data } = await axios.post('/api/auth/refresh', { refreshToken });
+        const { data } = await axios.post(
+          'https://softfrancbackend.onrender.com/api/auth/refresh', // ✅ updated
+          { refreshToken }
+        );
+
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
+
         processQueue(null, data.accessToken);
+
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(originalRequest);
+
       } catch (refreshError) {
         processQueue(refreshError, null);
         localStorage.clear();
