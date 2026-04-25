@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://teda-meda-4.onrender.com/api', // ✅ updated
+  baseURL: 'https://teda-meda-5.onrender.com', // ✅ updated
   headers: { 'Content-Type': 'application/json' },
   withCredentials: false
 });
